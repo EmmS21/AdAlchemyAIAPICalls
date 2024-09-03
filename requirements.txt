@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+google-ads
+boto3
+pydantic
+pydantic-settings
+python-dotenv
+aiohttp
