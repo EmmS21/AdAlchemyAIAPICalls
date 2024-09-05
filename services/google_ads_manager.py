@@ -208,7 +208,7 @@ class GoogleAdsManager:
             logger.error(f'An unexpected error occurred: {e}')
             raise
                 
-    def create_search_ad(self, campaign_name, headlines, descriptions, keywords):
+    def create_search_ad(self, campaign_name, headlines, descriptions, keywords, business_website):
         self.initialize_client()
         try:
             # Get the campaign
@@ -246,7 +246,7 @@ class GoogleAdsManager:
                 ad.responsive_search_ad.headlines.append({"text": headline})
             for description in descriptions:
                 ad.responsive_search_ad.descriptions.append({"text": description})
-            ad.final_urls.append("http://www.example.com")
+            ad.final_urls.append(business_website)
 
             # Add the ad
             ad_service = self.client.get_service("AdGroupAdService")
