@@ -64,18 +64,18 @@ async def authenticate(auth_request: AuthRequest):
     try:
         auth_result = authentication_google(auth_request.customer_id, auth_request.credentials)
         if isinstance(auth_result, dict):
-            return auth_result
+            return Response(content=json.dumps(auth_result), media_type="application/json")
         elif hasattr(auth_result, 'to_json'):
-            return auth_result.to_json()
+            return Response(content=auth_result.to_json(), media_type="application/json")
         else:
-            return {
+            return Response(content=json.dumps({
                 "token": auth_result.token,
                 "refresh_token": auth_result.refresh_token,
                 "token_uri": auth_result.token_uri,
                 "client_id": auth_result.client_id,
                 "client_secret": auth_result.client_secret,
                 "scopes": auth_result.scopes
-            }
+            }), media_type="application/json")
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
