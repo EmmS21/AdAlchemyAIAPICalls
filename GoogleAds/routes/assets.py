@@ -39,7 +39,7 @@ async def upload_price(asset: AssetUpload, price: float):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.get("/get_logo_assets")
+@router.post("/get_logo_assets")
 async def get_logo_assets(asset: AssetUpload):
     try:
         manager = GoogleAdsManager(client=asset.credentials, customer_id=asset.customer_id)
@@ -56,7 +56,7 @@ async def get_logo_assets(asset: AssetUpload):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.get("/get_price_assets")
+@router.post("/get_price_assets")
 async def get_price_assets(asset: AssetUpload):
     try:
         manager = GoogleAdsManager(client=asset.credentials, customer_id=asset.customer_id)
