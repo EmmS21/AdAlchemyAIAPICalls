@@ -41,8 +41,10 @@ async def upload_price(asset: AssetUpload, price: float):
 
 @router.post("/get_logo_assets")
 async def get_logo_assets(asset: AssetUpload):
+    print("Received credentials:", asset)
+
     try:
-        manager = GoogleAdsManager(client=asset.credentials, customer_id=asset.customer_id)
+        manager = GoogleAdsManager(client=asset.credentials.dict(), customer_id=asset.customer_id)
         result = manager.get_logo_assets()
         return {"message": "Logo assets retrieved successfully", "assets": result}
     except GoogleAdsException as ex:

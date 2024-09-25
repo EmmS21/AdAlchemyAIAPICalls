@@ -13,7 +13,7 @@ class GoogleAdsManager:
             raise ValueError(f"Invalid customer ID format: {self.customer_id}. It must be a 10-digit number.")
         
         self.credentials = client  
-        self.developer_token = client.get('developer_token')
+        self.developer_token = client['developer_token']
 
     def initialize_client(self):
         self.client = GoogleAdsClient.load_from_dict({
