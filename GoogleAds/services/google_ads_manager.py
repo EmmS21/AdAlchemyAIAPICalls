@@ -303,3 +303,64 @@ class GoogleAdsManager:
         asset.price_asset.price = price
         response = asset_service.mutate_assets(customer_id=self.customer_id, operations=[asset_operation])
         return response.results[0].resource_name
+
+    def get_logo_assets(self):
+        self.initialize_client()
+        ga_service = self.client.get_service("GoogleAdsService")
+        query = """
+            SELECT
+                asset.resource_name,
+                asset.name,
+                asset.image_asset.file_size,
+                asset.image_asset.full_size.width_pixels,
+                asset.image_asset.full_size.height_pixels,
+                asset.image_asset.full_size.url
+            FROM asset
+            WHERE asset.type = IMAGE
+            AND asset.name LIKE '%Logo%'
+        """
+        response = ga_service.search(customer_id=self.customer_id, query=query)
+        logo_assets = []
+        for row in response:
+            asset = row.asset
+            logo_assets.append({
+                "resource_name": asset.resource_name,
+                "name": asset.name,
+                "file_size": asset.image_asset.file_size,
+                "width": asset.image_asset.full_size.width_pixels,
+                "height": asset.image_asset.full_size.height_pixels,
+                "url": asset.image_asset.full_size.url
+            })
+        return logo_assets
+
+    def get_price_assets(self):
+        self.initialize_client()
+        ga_service = self.client.get_service("GoogleAdsService")
+        query = """
+            SELECT
+                asset.resource_name,
+                asset.name,
+                asset.price_asset.type,
+                asset.price_asset.price_offering.header,
+                asset.price_asset.price_offering.description,
+                asset.price_asset.price_offering.price.amount_micros,
+                asset.price_asset.price_offering.price.currency_code,
+                asset.price_asset.price_offering.unit
+            FROM asset
+            WHERE asset.type = PRICE
+        """
+        response = ga_service.search(customer_id=self.customer_id, query=query)
+        price_assets = []
+        for row in response:
+            asset = row.asset
+            price_assets.append({
+                "resource_name": asset.resource_name,
+                "name": asset.name,
+                "type": asset.price_asset.type,
+                "header": asset.price_asset.price_offering.header,
+                "description": asset.price_asset.price_offering.description,
+                "price_amount": asset.price_asset.price_offering.price.amount_micros / 1000000,
+                "currency_code": asset.price_asset.price_offering.price.currency_code,
+                "unit": asset.price_asset.price_offering.unit
+            })
+        return price_assets
