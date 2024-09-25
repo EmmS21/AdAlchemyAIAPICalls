@@ -15,7 +15,7 @@ def create_ad(ad: AdCreate):
             ad.headlines,
             ad.descriptions,
             ad.keywords,
-            ad.business_website
+            ad.final_url
         )
         return {"message": "Ad created successfully", "ad_group_id": result}
     except GoogleAdsException as ex:

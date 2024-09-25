@@ -282,3 +282,24 @@ class GoogleAdsManager:
         except Exception as e:
             logger.error(f'An unexpected error occurred: {e}')
             raise
+    
+    def upload_logo(self, campaign_name, file):
+        self.initialize_client()
+        asset_service = self.client.get_service("AssetService")
+        asset_operation = self.client.get_type("AssetOperation")
+        asset = asset_operation.create
+        asset.name = f"{campaign_name} Logo"
+        asset.image_asset.data = file.file.read()
+        asset.image_asset.mime_type = self.client.enums.MimeTypeEnum.IMAGE_PNG
+        response = asset_service.mutate_assets(customer_id=self.customer_id, operations=[asset_operation])
+        return response.results[0].resource_name
+
+    def upload_price(self, campaign_name, price):
+        self.initialize_client()
+        asset_service = self.client.get_service("AssetService")
+        asset_operation = self.client.get_type("AssetOperation")
+        asset = asset_operation.create
+        asset.name = f"{campaign_name} Price"
+        asset.price_asset.price = price
+        response = asset_service.mutate_assets(customer_id=self.customer_id, operations=[asset_operation])
+        return response.results[0].resource_name
